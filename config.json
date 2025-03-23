@@ -1,0 +1,9 @@
+{
+    "database": {
+        "host": "localhost",
+        "port": 4000,
+        "user": "root",
+        "password": "Sinining@123",
+        "database": "type_orm"
+    }
+}
