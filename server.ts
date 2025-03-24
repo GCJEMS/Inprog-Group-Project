@@ -1,15 +1,31 @@
-import express, { NextFunction, Request, Response } from 'express';
-import cors from 'cors';
-import { errorHandler } from './_middleware/error-handler';
-import usersController from './users/users.controller';
+import 'reflect-metadata'; // Imported reflect-metadata
+import express from 'express';
+import { AppDataSource } from './_helpers/db';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware for parsing JSON requests
 app.use(express.json());
-app.use(cors());
-app.use('/users', usersController);
 
-// Ensure the error handler is placed AFTER all routes
-app.use((err: any, req: Request, res: Response, next: NextFunction) => errorHandler(err, req, res, next));
+// Connect to database first, then start the server
+AppDataSource.initialize()
+    .then(() => {
+        console.log('Database connected successfully.');
 
-const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
-app.listen(port, () => console.log('Server listening on port ' + port));
+        // Define a simple route
+        app.get('/', (req, res) => {
+            res.send('Server is running...');
+        });
+
+        // Start the Express server
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.error('Database connection error:', error);
+    });
