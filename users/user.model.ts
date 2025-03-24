@@ -1,19 +1,25 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-export default (sequelize: Sequelize) => {
-    return sequelize.define('User', {
-        email: { type: DataTypes.STRING, allowNull: false, unique: true },
-        passwordHash: { type: DataTypes.STRING, allowNull: false },
-        title: { type: DataTypes.STRING, allowNull: false },
-        firstName: { type: DataTypes.STRING, allowNull: false },
-        lastName: { type: DataTypes.STRING, allowNull: false },
-        role: { type: DataTypes.STRING, allowNull: false }
-    }, {
-        defaultScope: {
-            attributes: { exclude: ['passwordHash'] }
-        },
-        scopes: {
-            withHash: { attributes: { include: ['passwordHash'] } }
-        }
-    });
-};
+@Entity()
+export class User {
+    @PrimaryGeneratedColumn()
+    id!: number;
+
+    @Column({ unique: true })
+    email!: string;
+
+    @Column()
+    password!: string;
+
+    @Column()
+    title!: string;
+
+    @Column()
+    firstName!: string;
+
+    @Column()
+    lastName!: string;
+
+    @Column()
+    role!: string;
+}
